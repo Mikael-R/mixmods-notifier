@@ -4,15 +4,8 @@ require('dotenv/config')
 
 client.login(process.env.TOKEN)
 
-
-function dataAtual(){
-    let data = new Date()
-    return `[${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()} ${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}]`
-}
-
-
 client.on('ready', () => {
-    console.log(dataAtual() + ' Online')
+    console.log(new Date().toLocaleString('pt-BR', { timeZome: 'UTC-3'}) + ' Online')
 })
 
 client.on('message', msg => {
@@ -21,13 +14,13 @@ client.on('message', msg => {
                                                     [Mixmods-Notifier]
 :ballot_box_with_check: $ajuda: Informa os comandos para utilização.
 
-:ballot_box_with_check: $dataAtual: Informa a data juntamente com a hora(horário do servidor do bot).
+:ballot_box_with_check: $dataAtual: Informa a data juntamente com a hora(UTC-3).
 **`)
     }
 })
 
 client.on('message', msg => {
     if (msg.content.toLocaleLowerCase().startsWith('$dataatual')) {
-        msg.reply(dataAtual())
+        msg.reply(new Date().toLocaleString('pt-BR', { timeZome: 'UTC-3'}))
     }
 })
