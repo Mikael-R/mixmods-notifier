@@ -1,0 +1,15 @@
+{
+  "name": "mixmods-notifier",
+  "version": "1.0.0",
+  "description": "Notifica sobre novos posts da mixmods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikael Rolim de Aquino",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
+  }
+}
