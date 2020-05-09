@@ -1,9 +1,9 @@
 const Discord = require('discord.js')
-const client = new Discord.Client()
 const RssParser = require('rss-parser')
-const parser = new RssParser()
-
 require('dotenv/config')
+
+const client = new Discord.Client()
+const parser = new RssParser()
 
 client.on('ready', () => { // informações do bot quando está online //
     console.log(`[${new Date().toLocaleString('pt-BR')}] Logado como ${client.user.tag}`)
@@ -11,15 +11,25 @@ client.on('ready', () => { // informações do bot quando está online //
 
 client.on('message', async msg => { // informa os comandos //
     let embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784') // definições do embed //
+
     if (msg.content.toLocaleLowerCase().split(' ')[0] != '/mixmods') { // verifica se a mensagem é um comando //
         return
     }
     else if (msg.content.toLocaleLowerCase() == '/mixmods ping') { // comando de teste //
-        msg.channel.send(`${msg.author} pong`)
+        embed.setDescription(`
+:ping_pong: Pong!
+
+:purple_circle: Server: ${Date.now() - msg.createdTimestamp} ms
+
+:purple_circle: Api: ${client.ws.ping} ms
+        `)
+        msg.channel.send(embed)
     }
     else if (msg.content.toLocaleLowerCase() == '/mixmods ajuda') { // informa os comandos //
         embed.setDescription(`
 :purple_circle: **/mixmods ajuda**: Informa os comandos para utilização.
+
+:purple_circle: **/mixmods ping**: Informa o ping do servidor e da api.
 
 :purple_circle: **/mixmods data**: Informa a data juntamente com a hora(UTC-3).
 
@@ -71,7 +81,7 @@ client.on('message', async msg => { // informa os comandos //
 `)
         msg.channel.send(embed)
     }
-    if (msg.content.toLocaleLowerCase() == '/mixmods links') {
+    else if (msg.content.toLocaleLowerCase() == '/mixmods links') {
         embed.setDescription(`
 :purple_circle: Site: https://mixmods.com.br
 
