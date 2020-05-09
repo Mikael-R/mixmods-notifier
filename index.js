@@ -26,6 +26,8 @@ client.on('message', async msg => { // informa os comandos //
 :purple_circle: **/mixmods posts**: Informa os 4 últimos posts do blog.
 
 :purple_circle: **/mixmods post**: Informa o último post do blog.
+
+:purple_circle: **/mixmods links**: Informa os links para o site e o fórum.
         `)
         msg.channel.send(embed)
     }
@@ -69,7 +71,14 @@ client.on('message', async msg => { // informa os comandos //
 `)
         msg.channel.send(embed)
     }
-    else {
+    if (msg.content.toLocaleLowerCase() == '/mixmods links') {
+        embed.setDescription(`
+:purple_circle: Site: https://mixmods.com.br
+
+:purple_circle: Fórum: https://forum.mixmods.com.br
+        `)
+        msg.channel.send(embed)
+    } else {
         embed.setDescription(`:purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.`)
         msg.channel.send(embed)
     }
