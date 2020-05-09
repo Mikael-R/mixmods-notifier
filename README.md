@@ -21,10 +21,10 @@ $ npm start
 
 ## Feito com
 * [NodeJs](https://nodejs.org/) - Linguagem de programação
-* [Discord.js](https://discord.js.org/#/) - Lib para consulta da API do Discord
+* [Discord.js](https://discord.js.org/#/) - Módulo para interagir com a API do Discord
 
 ## Autor
 * **Mikael-R** - *Trabalho inicial* - [Mikael-R](https://github.com/Mikael-R)
 
-## Licença
-Este projeto é licenciado pela licenã MIT- veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+### Licença
+Este projeto é licenciado pela licença MIT- veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
