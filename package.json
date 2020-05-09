@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Notifica sobre novos posts da mixmods",
   "main": "index.js",
+  "start": "node index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
