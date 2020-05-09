@@ -4,20 +4,19 @@ require('dotenv/config')
 
 client.on('ready', () => {
     console.log(`[${new Date().toLocaleString('pt-BR')}] ${client.user.tag}`)
-    //console.log(new Date().toLocaleString('pt-BR') + ' Online' + client.user.tag)
 })
 
 client.on('message', msg => {
     if (msg.content.toLocaleLowerCase() == '/mixmods ajuda') {
         msg.channel.send(`
-                                                    [Mixmods-Notifier]
-:ballot_box_with_check: **/mixmods ajuda**: Informa os comandos para utilização.
+**======================= [Mixmods-Notifier] =======================**
+:white_check_mark: **/mixmods ajuda**: Informa os comandos para utilização.
 
-:ballot_box_with_check: **/mixmods data**: Informa a data juntamente com a hora(UTC-3).
+:white_check_mark: **/mixmods data**: Informa a data juntamente com a hora(UTC-3).
 `)
     }
     if (msg.content.toLocaleLowerCase() == '/mixmods data') {
-        msg.reply(` neste momento estou operando no dia ${new Date().getDay} de ${new Date().getMonth} de ${new Date().getFullYear} as ${new Date().getHours + 3}:${new Date().getMinutes}:${new Date().getSeconds}`)
+        msg.channel.send(`Neste momento estou operando no dia ${new Date().getDay()}/${new Date().getMonth()}/${new Date().getFullYear()} as ${new Date().getHours() + 3}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
     }
     if (msg.content.toLocaleLowerCase() == '/mixmods ping') {
         msg.channel.send('pong')
