@@ -15,7 +15,7 @@ client.on('message', async msg => { // informa os comandos //
     if (msg.content.toLocaleLowerCase().split(' ')[0] != '/mixmods') { // verifica se a mensagem é um comando //
         return
     }
-    else if (msg.content.toLocaleLowerCase() == '/mixmods ping') { // comando de teste //
+    else if (msg.content.toLocaleLowerCase() == '/mixmods ping') { // informa o ping do servidor e da api //
         embed.setDescription(`
 :ping_pong: Pong!
 
@@ -31,7 +31,7 @@ client.on('message', async msg => { // informa os comandos //
 
 :purple_circle: **/mixmods ping**: Informa o ping do servidor e da api.
 
-:purple_circle: **/mixmods data**: Informa a data juntamente com a hora(UTC-3).
+:purple_circle: **/mixmods data**: Informa a data juntamente com a hora.
 
 :purple_circle: **/mixmods posts**: Informa os 4 últimos posts do blog.
 
@@ -41,7 +41,7 @@ client.on('message', async msg => { // informa os comandos //
         `)
         msg.channel.send(embed)
     }
-    else if (msg.content.toLocaleLowerCase() == '/mixmods data') { // informa a data(UTC-3) //
+    else if (msg.content.toLocaleLowerCase() == '/mixmods data') { // informa a data //
         embed.setDescription(`Neste momento estou operando no dia ${new Date().getDay()}/${new Date().getMonth()}/${new Date().getFullYear()} as ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
         msg.channel.send(embed)
     }
