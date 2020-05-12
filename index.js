@@ -7,7 +7,7 @@ const parser = new RssParser()
 
 client.on('ready', () => {
   // informações do bot quando está online //
-  console.log(`[${new Date().toLocaleString('pt-BR')}] Logado como ${client.user.tag}`)
+  console.log(`[${new Date().getDay()}/${new Date().getMonth()}/${new Date().getFullYear()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] Logado como ${client.user.tag}`)
 })
 
 client.on('message', async (msg) => {
@@ -49,7 +49,7 @@ client.on('message', async (msg) => {
     msg.channel.send(embed)
   } else if (msg.content.toLocaleLowerCase() === '/mixmods posts') {
     // informa os 4 últimos posts //
-    for (let n = 0; n < 4; n++) {
+    for (let n = 0; n < 4; n += 1) {
       // máximo de 25 posts(0 a 24) //
       let categorias = '| '
       for (const c in feed.items[n].categories) {
@@ -62,8 +62,7 @@ client.on('message', async (msg) => {
 
 :purple_circle: **Categorias**: ${categorias}
 
-:purple_circle: **Publicado**: ${
-        feed.items[n].pubDate.substr(5, 3) + ' ' + feed.items[n].pubDate.substr(8, 9)}`)
+:purple_circle: **Publicado**: ${feed.items[n].pubDate.substr(5, 3) + ' ' + feed.items[n].pubDate.substr(8, 9)}`)
       msg.channel.send(embed)
     }
   } else if (msg.content.toLocaleLowerCase() === '/mixmods post') {
