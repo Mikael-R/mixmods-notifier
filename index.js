@@ -6,8 +6,8 @@ const client = new Discord.Client()
 const parser = new RssParser()
 
 client.on('ready', () => {
-  // informações do bot quando está online //
-  console.log(`[${new Date().getDay()}/${new Date().getMonth()}/${new Date().getFullYear()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}] Logado como ${client.user.tag}`)
+  // online //
+  console.log(`Logado como ${client.user.tag}`)
 })
 
 client.on('message', async (msg) => {
@@ -45,7 +45,7 @@ client.on('message', async (msg) => {
     msg.channel.send(embed)
   } else if (msg.content.toLocaleLowerCase() === '/mixmods data') {
     // informa a data //
-    embed.setDescription(`Neste momento estou operando no dia ${new Date().getDay()}/${new Date().getMonth()}/${new Date().getFullYear()} as ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
+    embed.setDescription(new Date())
     msg.channel.send(embed)
   } else if (msg.content.toLocaleLowerCase() === '/mixmods posts') {
     // informa os 4 últimos posts //
@@ -90,10 +90,20 @@ client.on('message', async (msg) => {
         `)
     msg.channel.send(embed)
   } else {
-    // mensagem de erro //
+    // comando inválido //
     embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
     msg.channel.send(embed)
   }
 })
+
+//Heroku anti idle
+if(process.env.HEROKU_LINK)
+    (() => {
+        setInterval(async () => {
+            await fetch(HEROKU_LINK)
+                .catch(() => {});
+        }, 1000 * 60 * 5);
+
+    })();
 
 client.login(process.env.TOKEN)
