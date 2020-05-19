@@ -96,14 +96,4 @@ client.on('message', async (msg) => {
   }
 })
 
-//Heroku anti idle
-if(process.env.HEROKU_LINK)
-    (() => {
-        setInterval(async () => {
-            await fetch(HEROKU_LINK)
-                .catch(() => {});
-        }, 1000 * 60 * 5);
-
-    })();
-
 client.login(process.env.TOKEN)
