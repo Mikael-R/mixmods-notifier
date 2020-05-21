@@ -13,7 +13,7 @@ ajuda = () => {
     message.push(`:purple_circle: **/mixmods links**: Informa os links para o site e o fórum.`);
     message.push(`:purple_circle: **/mixmods post-timer on**: Liga o timer para verificar o último post a cada 5 segundos.`);
     message.push(`:purple_circle: **/mixmods post-timer off**: Desliga o timer.`);
-    
+
     embed.setDescription(message.join('\n\n'));
 
     return embed;
@@ -80,12 +80,9 @@ createEmbed = () => {
     return new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
 }
 
-let timer;
-let last_title;
+turnTimerOn = (msg, postTimer) => {
 
-turnTimerOn = (msg) => {
-
-    if (timer) {
+    if (postTimer.timer) {
         const embed = createEmbed();
         embed.setDescription(':purple_circle: A notificação já está ativada.\n\n:purple_circle: Use ``/mixmods post-timer off`` para desativar.')
         msg.channel.send(embed)
@@ -95,15 +92,15 @@ turnTimerOn = (msg) => {
         embed.setDescription(':purple_circle: Notificação: on.')
         msg.channel.send(embed)
 
-        timer = setInterval(async () => {
-            
+        postTimer.timer = setInterval(async () => {
+
             const feed = await feedService.getFeed();
 
-            if (last_title === feed.items[0].title) {
+            if (postTimer.last_title === feed.items[0].title) {
                 return;
             }
 
-            last_title = feed.items[0].title;
+            postTimer.last_title = feed.items[0].title;
             const message = feedService.parse(feed.items[0]);
 
             const embed = createEmbed();
@@ -114,10 +111,11 @@ turnTimerOn = (msg) => {
     }
 }
 
-turnTimerOff = (msg) => {
-    clearInterval(timer)
-    timer = undefined
+turnTimerOff = (msg, postTimer) => {
 
+    clearInterval(postTimer.timer)
+    postTimer.timer = undefined
+    
     const embed = createEmbed();
     embed.setDescription(':purple_circle: Notificação: off.')
     msg.channel.send(embed)

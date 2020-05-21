@@ -1,13 +1,19 @@
 const Discord = require('discord.js')
 const commandService = require('./service/commands')
+const PostTimer = require('./model/post_timer')
 
 const dotenv = require('dotenv')
 dotenv.config();
 
 const client = new Discord.Client()
+const postTimers = [];
 
 client.on('ready', () => {
   console.log(`Logado como ${client.user.tag}`)
+
+  client.channels.cache.forEach(c => {
+    postTimers[c.id] = new PostTimer();
+  })
 })
 
 client.on('message', (msg) => {
@@ -58,9 +64,9 @@ client.on('message', (msg) => {
       case 'post-timer': 
 
         if (command[2] === 'on') {
-          commandService.turnTimerOn(msg);
+          commandService.turnTimerOn(msg, postTimers[msg.channel.id]);
         } else if (command[2] === 'off') {
-          commandService.turnTimerOff(msg);
+          commandService.turnTimerOff(msg, postTimers[msg.channel.id]);
         } else {
           msg.channel.send(commandService.timerOptions());
         }
