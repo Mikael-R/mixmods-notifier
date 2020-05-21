@@ -35,6 +35,10 @@ client.on('message', (msg) => {
         msg.channel.send(commandService.ping(msg, client));
         break;
 
+      case 'data':
+        msg.channel.send(commandService.data());
+        break;
+
       case 'posts':
         commandService.posts().then(embeds => {
           embeds.forEach(embed => msg.channel.send(embed));
@@ -48,7 +52,7 @@ client.on('message', (msg) => {
         break;
 
       case 'links':
-        msg.channel.send(commandService.links(client))
+        msg.channel.send(commandService.links())
         break;
 
       case 'post-timer': 
@@ -56,7 +60,7 @@ client.on('message', (msg) => {
         if (command[2] === 'on') {
           commandService.turnTimerOn(msg);
         } else if (command[2] === 'off') {
-          commandService.turnTimerOff();
+          commandService.turnTimerOff(msg);
         } else {
           msg.channel.send(commandService.timerOptions());
         }
