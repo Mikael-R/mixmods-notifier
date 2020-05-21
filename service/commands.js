@@ -11,7 +11,8 @@ ajuda = () => {
     message.push(`:purple_circle: **/mixmods post**: Informa o último post do blog.`);
     message.push(`:purple_circle: **/mixmods posts**: Informa os últimos 4 posts do blog.`);
     message.push(`:purple_circle: **/mixmods links**: Informa os links para o site e o fórum.`);
-    message.push(`:purple_circle: **/mixmods post-timer on**: Liga o timer para verificar o último post a cada 5 segundos.`);
+    message.push(`:purple_circle: **/mixmods post-timer**: Verifica o estado do timer.`);
+    message.push(`:purple_circle: **/mixmods post-timer on**: Liga o timer.`);
     message.push(`:purple_circle: **/mixmods post-timer off**: Desliga o timer.`);
 
     embed.setDescription(message.join('\n\n'));
@@ -89,7 +90,7 @@ turnTimerOn = (msg, postTimer) => {
     } else {
 
         const embed = createEmbed();
-        embed.setDescription(':purple_circle: Notificação: on.')
+        embed.setDescription(':purple_circle: Notificação: on')
         msg.channel.send(embed)
 
         postTimer.timer = setInterval(async () => {
@@ -115,9 +116,9 @@ turnTimerOff = (msg, postTimer) => {
 
     clearInterval(postTimer.timer)
     postTimer.timer = undefined
-    
+
     const embed = createEmbed();
-    embed.setDescription(':purple_circle: Notificação: off.')
+    embed.setDescription(':purple_circle: Notificação: off')
     msg.channel.send(embed)
 }
 
