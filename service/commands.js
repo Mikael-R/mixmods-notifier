@@ -10,7 +10,9 @@ ajuda = () => {
     message.push(`:purple_circle: **/mixmods data**: Informa a data juntamente com a hora.`);
     message.push(`:purple_circle: **/mixmods post**: Informa o último post do blog.`);
     message.push(`:purple_circle: **/mixmods links**: Informa os links para o site e o fórum.`);
-
+    message.push(`:purple_circle: **/mixmods post-timer on**: Liga o timer para verificar o último post a cada 5 segundos.`);
+    message.push(`:purple_circle: **/mixmods post-timer off**: Desliga o timer.`);
+    
     embed.setDescription(message.join('\n\n'));
 
     return embed;
@@ -44,19 +46,8 @@ posts = async () => {
     for (let n = 0; n < 4; n += 1) {
 
         const embed = createEmbed();
-        const message = [];
-
-        let categorias = '| '
-        for (const c in feed.items[n].categories) {
-            categorias += feed.items[n].categories[c]._ + ' | '
-        }
-
-        message.push(`:purple_circle: **Título**: ${feed.items[n].title}`)
-        message.push(`:purple_circle: **Link**: ${feed.items[n].link}`)
-        message.push(`:purple_circle: **Categorias**: ${categorias}`)
-        message.push(`:purple_circle: **Publicado**: ${feed.items[n].pubDate.substr(5, 3) + ' ' + feed.items[n].pubDate.substr(8, 9)}`)
-
-        embed.setDescription(message.join('\n\n'))
+        const message = feedService.parse(feed.items[n]);
+        embed.setDescription(message)
 
         embeds.push(embed)
     }
@@ -68,20 +59,7 @@ post = async () => {
 
     const feed = await feedService.getFeed();
     const embed = createEmbed();
-    const message = [];
-
-    let categorias = '| '
-    for (const c in feed.items[0].categories) {
-        categorias += feed.items[0].categories[c]._ + ' | '
-    }
-
-    message.push(`:purple_circle: **Título**: ${feed.items[0].title}`)
-    message.push(`:purple_circle: **Link**: ${feed.items[0].link}`)
-    message.push(`:purple_circle: **Categorias**: ${categorias}`)
-    message.push(`:purple_circle: **Publicado**: ${feed.items[0].pubDate.substr(5, 3) + ' ' + feed.items[0].pubDate.substr(8, 9)}`)
-
-    embed.setDescription(message.join('\n\n'))
-
+    embed.setDescription(feedService.parse(feed.items[0]));
     return embed;
 }
 
@@ -103,6 +81,7 @@ createEmbed = () => {
 }
 
 let timer;
+let last_title;
 
 turnTimerOn = (msg) => {
 
@@ -111,8 +90,22 @@ turnTimerOn = (msg) => {
         embed.setDescription(':purple_circle: A notificação já está ativada.\n\n:purple_circle: Use ``/mixmods post-timer off`` para desativar.')
         msg.channel.send(embed)
     } else {
-        timer = setInterval(() => {
-            post().then(embed => msg.channel.send(embed))
+
+        timer = setInterval(async () => {
+            
+            const feed = await feedService.getFeed();
+
+            if (last_title === feed.items[0].title) {
+                return;
+            }
+
+            last_title = feed.items[0].title;
+            const message = feedService.parse(feed.items[0]);
+
+            const embed = createEmbed();
+            embed.setDescription(message)
+            msg.channel.send(embed)
+
         }, 5000);
     }
 }
@@ -120,6 +113,19 @@ turnTimerOn = (msg) => {
 turnTimerOff = () => {
     clearInterval(timer)
     timer = undefined
+}
+
+timerOptions = () => {
+    const embed = createEmbed();
+
+    const message = []
+
+    message.push(':purple_circle: Use ``/mixmods post-timer on`` para ativar.')
+    message.push(':purple_circle: Use ``/mixmods post-timer off`` para desativar.')
+
+    embed.setDescription(message.join('\n\n'))
+
+    return embed;
 }
 
 module.exports = {
@@ -130,5 +136,6 @@ module.exports = {
     post,
     links,
     turnTimerOn,
-    turnTimerOff
+    turnTimerOff,
+    timerOptions
 }

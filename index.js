@@ -54,12 +54,20 @@ client.on('message', (msg) => {
       case 'post-timer': 
 
         if (command[2] === 'on') {
-          commandService.turnTimerOn(msg)
+          commandService.turnTimerOn(msg);
         } else if (command[2] === 'off') {
           commandService.turnTimerOff();
+        } else {
+          msg.channel.send(commandService.timerOptions());
         }
 
         break;
+
+        default:
+          const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
+          embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
+          msg.channel.send(embed);
+          break;
 
     }
   }
