@@ -127,7 +127,7 @@ timerOptions = (postTimer) => {
 
     const message = []
 
-    message.push(`:purple_circle: Notificação: ${postTimer.timer ? 'on' : 'off'}.`)
+    message.push(`:purple_circle: Notificação: ${postTimer.timer ? 'on' : 'off'}`)
     message.push(':purple_circle: Use ``/mixmods ajuda`` para ver os comandos.')
 
     embed.setDescription(message.join('\n\n'))
