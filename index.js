@@ -68,7 +68,7 @@ client.on('message', (msg) => {
         } else if (command[2] === 'off') {
           commandService.turnTimerOff(msg, postTimers[msg.channel.id]);
         } else {
-          msg.channel.send(commandService.timerOptions());
+          msg.channel.send(commandService.timerOptions(postTimers[msg.channel.id]));
         }
 
         break;

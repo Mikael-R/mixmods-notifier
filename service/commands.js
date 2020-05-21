@@ -121,12 +121,12 @@ turnTimerOff = (msg, postTimer) => {
     msg.channel.send(embed)
 }
 
-timerOptions = () => {
+timerOptions = (postTimer) => {
     const embed = createEmbed();
 
     const message = []
 
-    message.push(`:purple_circle: Notificação: ${timer ? 'on' : 'off'}.`)
+    message.push(`:purple_circle: Notificação: ${postTimer.timer ? 'on' : 'off'}.`)
     message.push(':purple_circle: Use ``/mixmods ajuda`` para ver os comandos.')
 
     embed.setDescription(message.join('\n\n'))
