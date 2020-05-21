@@ -46,12 +46,7 @@ posts = async () => {
     const embeds = [];
 
     for (let n = 0; n < 4; n += 1) {
-
-        const embed = createEmbed();
-        const message = feedService.parse(feed.items[n]);
-        embed.setDescription(message)
-
-        embeds.push(embed)
+        embeds.push(createEmbedPost(feed.items[n]))
     }
 
     return embeds;
@@ -60,9 +55,13 @@ posts = async () => {
 post = async () => {
 
     const feed = await feedService.getFeed();
-    const embed = createEmbed();
-    embed.setDescription(feedService.parse(feed.items[0]));
-    return embed;
+    return createEmbedPost(feed.items[0]);
+}
+
+createEmbedPost = (item) => {
+    return createEmbed()
+        .setDescription(feedService.parse(item))
+        .setImage(feedService.getImageLink(item));
 }
 
 links = () => {
