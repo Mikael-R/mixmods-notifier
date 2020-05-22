@@ -61,7 +61,7 @@ client.on('message', (msg) => {
         msg.channel.send(commandService.links())
         break;
 
-      case 'post-timer': 
+      case 'post-timer':
 
         if (command[2] === 'on') {
           commandService.turnTimerOn(msg, postTimers[msg.channel.id]);

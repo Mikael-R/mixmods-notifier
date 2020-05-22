@@ -16,7 +16,7 @@ parse = (item) => {
     message.push(`:purple_circle: **Link**: ${item.link}`)
     message.push(`:purple_circle: **Categorias**: ${categorias}`)
     message.push(`:purple_circle: **Publicado**: ${item.pubDate.substr(5, 3) + ' ' + item.pubDate.substr(8, 9)}`)
-    
+
     return message.join('\n\n');
 }
 
