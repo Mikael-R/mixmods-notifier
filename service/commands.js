@@ -101,10 +101,8 @@ turnTimerOn = (msg, postTimer) => {
             }
 
             postTimer.last_title = feed.items[0].title;
-            const message = feedService.parse(feed.items[0]);
 
-            const embed = createEmbed();
-            embed.setDescription(message)
+	    const embed = createEmbedPost(feed.items[0])
             msg.channel.send(embed)
 
         }, 5000);
