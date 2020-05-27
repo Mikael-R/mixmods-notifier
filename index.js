@@ -1,23 +1,35 @@
 const Discord = require('discord.js')
 const commandService = require('./service/commands')
-const PostTimer = require('./model/post_timer')
 
 const dotenv = require('dotenv')
 dotenv.config();
 
 const client = new Discord.Client()
-const postTimers = [];
 
 client.on('ready', () => {
+  client.user.setActivity('Vendo os novos posts da MixMods')
   console.log(`Logado como ${client.user.tag}`)
 
+  // create database if dont exists //
+  commandService.createDB()
+
+  // define the server channels that the bot is in the database //
   client.channels.cache.forEach(c => {
-    postTimers[c.id] = new PostTimer();
+    commandService.setChannelInDB(c.id)
   })
+
+  // get channels values from database //
+  const channels = commandService.readDB().channels
+
+  // passing each channel to the timer //
+  for (c in channels) {
+    const channel = client.channels.cache.get(channels[c].id)
+    commandService.turnTimer(channel)
+  }
+
 })
 
 client.on('message', (msg) => {
-
   const command = msg.content.toLocaleLowerCase().split(' ');
 
   if (command[0] !== '/mixmods') {
@@ -28,11 +40,12 @@ client.on('message', (msg) => {
 
   if (!method) {
     const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
-    embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
-    msg.channel.send(embed)
+    embed.setDescription(':purple_circle: Nenhum parâmetro passado, use **/mixmods ajuda** para ver a lista de comandos.')
+    msg.channel.send(embed);
   } else {
 
     switch (method) {
+
       case 'ajuda':
         msg.channel.send(commandService.ajuda())
         break;
@@ -62,23 +75,23 @@ client.on('message', (msg) => {
         break;
 
       case 'post-timer':
-
-        if (command[2] === 'on') {
-          commandService.turnTimerOn(msg, postTimers[msg.channel.id]);
-        } else if (command[2] === 'off') {
-          commandService.turnTimerOff(msg, postTimers[msg.channel.id]);
+        if (command[2] === 'on' || command[2] === 'off') {
+          msg.channel.send(commandService.setTimer(msg.channel.id, command[2]));
+          break
+        } else if (command[2] === 'status') {
+          msg.channel.send(commandService.timerOptions(msg.channel.id));
+          break
         } else {
-          msg.channel.send(commandService.timerOptions(postTimers[msg.channel.id]));
+          const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
+          embed.setDescription(':purple_circle: Nenhum parâmetro passado, use **/mixmods ajuda** para ver a lista de comandos.')
+          msg.channel.send(embed);
+          break
         }
 
-        break;
-
-        default:
-          const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
-          embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
-          msg.channel.send(embed);
-          break;
-
+      default:
+        const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
+        embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
+        msg.channel.send(embed);
     }
   }
 })
