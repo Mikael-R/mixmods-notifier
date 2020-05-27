@@ -18,14 +18,8 @@ client.on('ready', () => {
     commandService.setChannelInDB(c.id)
   })
 
-  // get channels values from database //
-  const channels = commandService.readDB().channels
-
-  // passing each channel to the timer //
-  for (c in channels) {
-    const channel = client.channels.cache.get(channels[c].id)
-    commandService.turnTimer(channel)
-  }
+  // activating the timer //
+  commandService.turnTimer(client)
 
 })
 

@@ -166,22 +166,27 @@ setTimer = (id, status) => {
   }
 }
 
-turnTimer = (channel) => {
+turnTimer = (client) => {
 
   const timer = setInterval(async () => {
 
-    const channelDB = getChannelValue(channel.id)
+    for (c in readDB().channels) {
+      const channel = client.channels.cache.get(readDB().channels[c].id)
 
-    const feed = await feedService.getFeed()
+      const channelDB = getChannelValue(channel.id)
 
-    if (channelDB.timer === true && channelDB.last_title !== feed.items[0].title) {
+      const feed = await feedService.getFeed()
 
-      console.log(`Post "${feed.items[0].title}" send to ${channelDB.id}`)
+      if (channelDB.timer === true && channelDB.last_title !== feed.items[0].title) {
 
-      const embed = createEmbedPost(feed.items[0])
-      channel.send(embed)
+        console.log(`Post "${feed.items[0].title}" send to ${channelDB.id}`)
 
-      db.set(`channels[${channelDB.pos}].last_title`, feed.items[0].title).write();
+        const embed = createEmbedPost(feed.items[0])
+        channel.send(embed)
+
+        db.set(`channels[${channelDB.pos}].last_title`, feed.items[0].title).write();
+
+      }
     }
   }, 10000);
 }
@@ -210,7 +215,6 @@ module.exports = {
   turnTimer,
   timerOptions,
   createDB,
-  readDB,
   setChannelInDB,
   setTimer
 }
