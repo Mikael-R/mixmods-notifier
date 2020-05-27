@@ -20,11 +20,7 @@ readDB = () => {
 existChannel = (id) => {
 
   const channels = db.value().channels
-
-  for (c in channels) {
-    if (channels[c].id === id) return true
-  }
-  return false
+  return channels.filter(channel => channel.id === id).length > 0
 }
 
 setChannelInDB = (id) => {
@@ -82,6 +78,9 @@ data = () => {
 posts = async () => {
 
   const feed = await feedService.getFeed();
+
+  if (!feed) return;
+
   const embeds = [];
 
   for (let n = 0; n < 4; n += 1) {
@@ -94,6 +93,9 @@ posts = async () => {
 post = async () => {
 
   const feed = await feedService.getFeed();
+
+  if (!feed) return;
+
   return createEmbedPost(feed.items[0]);
 }
 
@@ -140,11 +142,11 @@ getChannelValue = (id) => {
 
 setTimer = (id, status) => {
 
-  status = status === 'on' ? true : false
+  status = status === 'on'
 
   const channelDB = getChannelValue(id)
 
-  if (status === true && channelDB.timer === true) {
+  if (status && channelDB.timer) {
 
     const embed = createEmbed();
     embed.setDescription(':purple_circle: A notificação já está ativada.\n\n:purple_circle: Use ``/mixmods post-timer off`` para desativar.')
@@ -158,7 +160,11 @@ setTimer = (id, status) => {
 
   } else {
 
-    status === true ? db.set(`channels[${channelDB.pos}].timer`, true).write() : db.set(`channels[${channelDB.pos}].timer`, false).write()
+    if (status === true) {
+      db.set(`channels[${channelDB.pos}].timer`, true).write()
+    } else {
+      db.set(`channels[${channelDB.pos}].timer`, false).write()
+    }
 
     const embed = createEmbed();
     embed.setDescription(`:purple_circle: Notificação: **${status === true ? 'ON' : 'OFF'}**`)
