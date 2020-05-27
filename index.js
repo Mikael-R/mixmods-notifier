@@ -7,7 +7,7 @@ dotenv.config();
 const client = new Discord.Client()
 
 client.on('ready', () => {
-  client.user.setActivity('Vendo os novos posts da MixMods')
+  client.user.setActivity('informações para todos os cantos!')
   console.log(`Logado como ${client.user.tag}`)
 
   // create database if dont exists //
@@ -34,7 +34,7 @@ client.on('message', (msg) => {
 
   if (!method) {
     const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
-    embed.setDescription(':purple_circle: Nenhum parâmetro passado, use **/mixmods ajuda** para ver a lista de comandos.')
+    embed.setDescription(':purple_circle: Nenhum parâmetro passado.\n:purple_circle: Use **/mixmods ajuda** para ver a lista de comandos.')
     msg.channel.send(embed);
   } else {
 
@@ -77,14 +77,14 @@ client.on('message', (msg) => {
           break
         } else {
           const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
-          embed.setDescription(':purple_circle: Nenhum parâmetro passado, use **/mixmods ajuda** para ver a lista de comandos.')
+          embed.setDescription(':purple_circle: Nenhum parâmetro passado.\n:purple_circle: Use **/mixmods ajuda** para ver a lista de comandos.')
           msg.channel.send(embed);
           break
         }
 
       default:
         const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
-        embed.setDescription(':purple_circle: Comando inválido, use **/mixmods ajuda** para ver a lista de comandos.')
+        embed.setDescription(':purple_circle: Comando inválido.\n:purple_circle: Use **/mixmods ajuda** para ver a lista de comandos.')
         msg.channel.send(embed);
     }
   }
