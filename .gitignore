@@ -2,3 +2,4 @@
 /package-lock.json
 .env
 yarn.lock
+/db.json
