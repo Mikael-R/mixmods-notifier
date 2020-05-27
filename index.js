@@ -85,6 +85,7 @@ client.on('message', (msg) => {
           const embed = new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
           embed.setDescription(':purple_circle: Nenhum parâmetro passado, use **/mixmods ajuda** para ver a lista de comandos.')
           msg.channel.send(embed);
+          break
         }
 
       default:
