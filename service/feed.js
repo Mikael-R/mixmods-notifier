@@ -14,7 +14,7 @@ getFeed = async () => {
 parse = (item) => {
   const message = [];
 
-  const categorias = item.categories.reduce((acc, curr) => acc + ' | ' + curr._, '| ') + ' | ';
+  const categorias = item.categories.reduce((acc, curr) => acc + ' | ' + curr._, '') + ' | ';
 
   message.push(`:purple_circle: **Título**: ${item.title}`)
   message.push(`:purple_circle: **Link**: ${item.link}`)
