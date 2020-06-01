@@ -79,7 +79,7 @@ client.on('message', (msg) => {
         break;
 
       case '/mixmods post-timer status':
-        msg.channel.send(commandService.timerOptions(msg.channel.id));
+        commandService.timerOptions(msg.channel.id).then(embed => msg.channel.send(embed));
         break;
 
       default:

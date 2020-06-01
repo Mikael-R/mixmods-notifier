@@ -179,13 +179,15 @@ turnTimer = (client) => {
   }, 10000);
 }
 
-timerOptions = (id) => {
+timerOptions = async (id) => {
 
   const embed = createEmbed();
 
+  const channel = await channelRepository.findByChannelId(id);
+
   const message = []
 
-  message.push(`:purple_circle: Notificação: ${getChannelValue(id).timer === true ? '**ON**' : '**OFF**'}`)
+  message.push(`:purple_circle: Notificação: ${channel.isTimerOn ? '**ON**' : '**OFF**'}`)
   message.push(':purple_circle: Use ``/mixmods ajuda`` para ver os comandos.')
 
   embed.setDescription(message.join('\n\n'))
