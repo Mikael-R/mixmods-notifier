@@ -2,15 +2,19 @@ const RssParser = require('rss-parser')
 const parser = new RssParser()
 const { JSDOM } = require('jsdom')
 
-getFeed = async () => await parser.parseURL('https://www.mixmods.com.br/feeds/posts/default?alt=rss')
+getFeed = async () => {
+  try {
+    return await parser.parseURL('https://www.mixmods.com.br/feeds/posts/default?alt=rss')
+  } catch (ex) {
+    console.log(ex)
+    return null;
+  }
+}
 
 parse = (item) => {
   const message = [];
 
-  let categorias = '| '
-  for (const c in item.categories) {
-    categorias += item.categories[c]._ + ' | '
-  }
+  const categorias = item.categories.reduce((acc, curr) => acc + ' | ' + curr._, '') + ' | ';
 
   message.push(`:purple_circle: **Título**: ${item.title}`)
   message.push(`:purple_circle: **Link**: ${item.link}`)
