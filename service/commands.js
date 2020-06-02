@@ -3,96 +3,87 @@ const feedService = require('./feed')
 const channelRepository = require('../repository/channel-repository')
 
 ajuda = () => {
+  const embed = createEmbed()
+  const message = []
 
-  const embed = createEmbed();
-  const message = [];
+  message.push(':purple_circle: **/mixmods ajuda**: Informa os comandos para utilização.')
+  message.push(':purple_circle: **/mixmods ping**: Informa o ping do servidor e da api.'); ''
+  message.push(':purple_circle: **/mixmods data**: Informa a data juntamente com a hora.')
+  message.push(':purple_circle: **/mixmods post**: Informa o último post do blog.')
+  message.push(':purple_circle: **/mixmods posts**: Informa os últimos 4 posts do blog.')
+  message.push(':purple_circle: **/mixmods links**: Informa os links para o site e o fórum.')
+  message.push(':purple_circle: **/mixmods post-timer status**: Verifica o estado do timer.')
+  message.push(':purple_circle: **/mixmods post-timer on**: Liga o timer.')
+  message.push(':purple_circle: **/mixmods post-timer off**: Desliga o timer.')
 
-  message.push(`:purple_circle: **/mixmods ajuda**: Informa os comandos para utilização.`);
-  message.push(`:purple_circle: **/mixmods ping**: Informa o ping do servidor e da api.`); ''
-  message.push(`:purple_circle: **/mixmods data**: Informa a data juntamente com a hora.`);
-  message.push(`:purple_circle: **/mixmods post**: Informa o último post do blog.`);
-  message.push(`:purple_circle: **/mixmods posts**: Informa os últimos 4 posts do blog.`);
-  message.push(`:purple_circle: **/mixmods links**: Informa os links para o site e o fórum.`);
-  message.push(`:purple_circle: **/mixmods post-timer status**: Verifica o estado do timer.`);
-  message.push(`:purple_circle: **/mixmods post-timer on**: Liga o timer.`);
-  message.push(`:purple_circle: **/mixmods post-timer off**: Desliga o timer.`);
+  embed.setDescription(message.join('\n\n'))
 
-  embed.setDescription(message.join('\n\n'));
-
-  return embed;
+  return embed
 }
 
 ping = (msg, client) => {
+  const embed = createEmbed()
+  const message = []
 
-  const embed = createEmbed();
-  const message = [];
-
-  message.push(`:ping_pong: Pong!`)
+  message.push(':ping_pong: Pong!')
   message.push(`:purple_circle: Server: ${Date.now() - msg.createdTimestamp}ms`)
   message.push(`:purple_circle: Api: ${client.ws.ping}ms`)
 
-  embed.setDescription(message.join('\n\n'));
+  embed.setDescription(message.join('\n\n'))
 
-  return embed;
+  return embed
 }
 
 data = () => {
-
-  const embed = createEmbed();
-  embed.setDescription(new Date());
-  return embed;
+  const embed = createEmbed()
+  embed.setDescription(new Date())
+  return embed
 }
 
 posts = async () => {
+  const feed = await feedService.getFeed()
 
-  const feed = await feedService.getFeed();
+  if (!feed) return
 
-  if (!feed) return;
-
-  const embeds = [];
+  const embeds = []
 
   for (let n = 0; n < 4; n += 1) {
     embeds.push(createEmbedPost(feed.items[n]))
   }
 
-  return embeds;
+  return embeds
 }
 
 post = async () => {
+  const feed = await feedService.getFeed()
 
-  const feed = await feedService.getFeed();
+  if (!feed) return
 
-  if (!feed) return;
-
-  return createEmbedPost(feed.items[0]);
+  return createEmbedPost(feed.items[0])
 }
 
 createEmbedPost = (item) => {
-
   return createEmbed()
     .setDescription(feedService.parse(item))
-    .setImage(feedService.getImageLink(item));
+    .setImage(feedService.getImageLink(item))
 }
 
 links = () => {
+  const embed = createEmbed()
+  const message = []
 
-  const embed = createEmbed();
-  const message = [];
+  message.push(':purple_circle: Site: https://mixmods.com.br')
+  message.push(':purple_circle: Fórum: https://forum.mixmods.com.br')
 
-  message.push(`:purple_circle: Site: https://mixmods.com.br`)
-  message.push(`:purple_circle: Fórum: https://forum.mixmods.com.br`)
-
-  embed.setDescription(message.join('\n\n'));
-  return embed;
+  embed.setDescription(message.join('\n\n'))
+  return embed
 }
 
 createEmbed = () => {
-
-  return new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784');
+  return new Discord.MessageEmbed().setTitle('[Mixmods-Notifier]').setColor('#4e4784')
 }
 
 getChannelValue = (id) => {
-
   if (!existChannel(id)) setChannelInDB(id)
 
   const channels = readDB().channels
@@ -109,81 +100,64 @@ getChannelValue = (id) => {
 }
 
 setTimer = async (id, status) => {
-
   status = status === 'on'
 
-  const channel = await channelRepository.findByChannelId(id);
+  const channel = await channelRepository.findByChannelId(id)
 
   if (status && channel.isTimerOn) {
-
-    const embed = createEmbed();
+    const embed = createEmbed()
     embed.setDescription(':purple_circle: A notificação já está ativada.\n\n:purple_circle: Use ``/mixmods post-timer off`` para desativar.')
     return embed
-
   } else if (!status && !channel.isTimerOn) {
-
-    const embed = createEmbed();
+    const embed = createEmbed()
     embed.setDescription(':purple_circle: A notificação já está desativada.\n\n:purple_circle: Use ``/mixmods post-timer on`` para ativar.')
     return embed
-
   } else {
-
-    channel.isTimerOn = status;
+    channel.isTimerOn = status
     channelRepository.updateChannel(channel)
 
-    const embed = createEmbed();
+    const embed = createEmbed()
     embed.setDescription(`:purple_circle: Notificação: **${status === true ? 'ON' : 'OFF'}**`)
     return embed
   }
-
 }
 
 turnTimer = (client) => {
-
   setInterval(async () => {
+    const channelsWithTimer = await channelRepository.findByTimerOn()
 
-    const channelsWithTimer = await channelRepository.findByTimerOn();
-
-    // Se não existir nenhum canal com timer ligado, nem continua
     if (!channelsWithTimer.length) {
       console.log('Nenhum canal com timer habilitado')
-      return;
+      return
     }
 
-    // Busca o feed
     const feed = await feedService.getFeed()
-    
+
     const channelsToSend = channelsWithTimer.filter(channel => channel.lastTitleReceived !== feed.items[0].title)
-    
-    // Se não existir nenhum desatualizado, nem continua
+
     if (!channelsToSend.length) {
-      console.log('todos os canais com timer habilitados estão atualizados')
-      return;
+      console.log('Channels do not need updating')
+      return
     }
-    
-    //Realiza o parse apenas 1x
+
     const embed = createEmbedPost(feed.items[0])
 
-    // Atualiza os canais desatualizados com o último feed e envia o feed
     channelsToSend.forEach(channel => {
       console.log(`Post "${feed.items[0].title}" send to ${channel.id}`)
 
-      channel.lastTitleReceived = feed.items[0].title;
-      channelRepository.updateChannel(channel);
+      channel.lastTitleReceived = feed.items[0].title
+      channelRepository.updateChannel(channel)
 
       const discordChannel = client.channels.cache.get(channel.channelId)
       discordChannel.send(embed)
-    });
-    
-
-  }, 10000);
+    })
+  }, 10000)
 }
 
 timerOptions = async (id) => {
+  const embed = createEmbed()
 
-  const embed = createEmbed();
-
-  const channel = await channelRepository.findByChannelId(id);
+  const channel = await channelRepository.findByChannelId(id)
 
   const message = []
 
@@ -192,7 +166,7 @@ timerOptions = async (id) => {
 
   embed.setDescription(message.join('\n\n'))
 
-  return embed;
+  return embed
 }
 
 module.exports = {
