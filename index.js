@@ -1,8 +1,12 @@
-const Discord = require('discord.js')
-const commandService = require('./service/commands')
-
 const dotenv = require('dotenv')
 dotenv.config();
+
+require('./database/connection')
+
+const Discord = require('discord.js')
+const commandService = require('./service/commands')
+const channelRepository = require('./repository/channel-repository')
+
 
 const client = new Discord.Client()
 
@@ -10,17 +14,9 @@ client.on('ready', () => {
   client.user.setActivity('informações para todos os cantos!')
   console.log(`Started | ${client.user.tag}`)
 
-  // create database if dont exists //
-  commandService.createDB()
+  client.channels.cache.forEach(c => channelRepository.createIfNotExists(c.id))
 
-  // define the server channels that the bot is in the database //
-  client.channels.cache.forEach(c => {
-    commandService.setChannelInDB(c.id)
-  })
-
-  // activating the timer //
-  commandService.turnTimer(client)
-
+  commandService.turnTimer(client);
 })
 
 client.on('message', (msg) => {
@@ -75,15 +71,15 @@ client.on('message', (msg) => {
         break;
 
       case '/mixmods post-timer on':
-        msg.channel.send(commandService.setTimer(msg.channel.id, 'on'));
+        commandService.setTimer(msg.channel.id, 'on').then(embed => msg.channel.send(embed));
         break;
 
       case '/mixmods post-timer off':
-        msg.channel.send(commandService.setTimer(msg.channel.id, 'off'));
+        commandService.setTimer(msg.channel.id, 'off').then(embed => msg.channel.send(embed));
         break;
 
       case '/mixmods post-timer status':
-        msg.channel.send(commandService.timerOptions(msg.channel.id));
+        commandService.timerOptions(msg.channel.id).then(embed => msg.channel.send(embed));
         break;
 
       default:
