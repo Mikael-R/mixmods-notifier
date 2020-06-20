@@ -102,7 +102,11 @@ getChannelValue = (id) => {
 setTimer = async (id, status) => {
   status = status === 'on'
 
-  const channel = await channelRepository.findByChannelId(id)
+  let channel = await channelRepository.findByChannelId(id)
+
+  if (!channel) {
+    channel = channelRepository.createChannel(id);
+  }
 
   if (status && channel.isTimerOn) {
     const embed = createEmbed()
@@ -114,7 +118,7 @@ setTimer = async (id, status) => {
     return embed
   } else {
     channel.isTimerOn = status
-    channelRepository.updateChannel(channel)
+    channelRepository.saveOrUpdate(channel)
 
     const embed = createEmbed()
     embed.setDescription(`:purple_circle: Notificação: **${status === true ? 'ON' : 'OFF'}**`)
